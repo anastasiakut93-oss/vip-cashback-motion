@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Спецификация анимаций слайдера статусов и появления мини-карточки VIP Cashback для разработки: видео, таймлайны, кривые.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Анимации VIP Cashback">
+<meta property="og:description" content="Слайдер статусов и мини-карточка: тайминги, кривые и видео для разработки.">
+<meta property="og:image" content="https://anastasiakut93-oss.github.io/vip-cashback-motion/slider-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<title>Анимации VIP Cashback</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+
+  :root {
+    color-scheme: dark;
+    --ground: #121316;
+    --surface: #1a1b1f;
+    --surface-2: #22242a;
+    --line: #2d3037;
+    --ink: #ece7de;
+    --ink-2: #aaa49a;
+    --ink-3: #7c776f;
+    --accent: #e3b866;
+    --accent-ink: #1b1508;
+    --c-move: #e3b866;
+    --c-scale: #d49470;
+    --c-fade: #9fb3d3;
+    --c-blur: #b9a8dc;
+    --c-other: #8f938f;
+    --video-ground: #0f1012;
+    --font-display: "Unbounded", "Onest", system-ui, sans-serif;
+    --font-body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      color-scheme: light;
+      --ground: #f5f3ee;
+      --surface: #ffffff;
+      --surface-2: #efece5;
+      --line: #dfdad0;
+      --ink: #1d1b18;
+      --ink-2: #625d55;
+      --ink-3: #8a847a;
+      --accent: #a0741d;
+      --accent-ink: #ffffff;
+      --c-move: #b88a2c;
+      --c-scale: #b86c45;
+      --c-fade: #4f6f9f;
+      --c-blur: #7a64b0;
+      --c-other: #7b7f7b;
+      --video-ground: #121316;
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --ground: #f5f3ee;
+    --surface: #ffffff;
+    --surface-2: #efece5;
+    --line: #dfdad0;
+    --ink: #1d1b18;
+    --ink-2: #625d55;
+    --ink-3: #8a847a;
+    --accent: #a0741d;
+    --accent-ink: #ffffff;
+    --c-move: #b88a2c;
+    --c-scale: #b86c45;
+    --c-fade: #4f6f9f;
+    --c-blur: #7a64b0;
+    --c-other: #7b7f7b;
+    --video-ground: #121316;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    padding-inline: 20px;
+    padding-block: 0 96px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1120px; margin-inline: auto; }
+
+  header.top { padding-block: 56px 28px; display: grid; gap: 18px; }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(28px, 4.4vw, 46px);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+  .lead { color: var(--ink-2); max-width: 64ch; margin: 0; font-size: 17px; }
+  nav.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  nav.jump a {
+    font-size: 14px;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+  }
+  nav.jump a:hover { border-color: var(--accent); }
+  a:focus-visible, button:focus-visible, video:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .reading {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-block: 8px 8px;
+  }
+  .reading div { background: var(--surface); padding: 14px 16px; font-size: 14px; color: var(--ink-2); }
+  .reading b { display: block; color: var(--ink); font-weight: 600; margin-bottom: 2px; font-size: 14px; }
+
+  section.anim { padding-block: 64px 8px; border-top: 1px solid var(--line); margin-top: 48px; }
+  .sec-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 16px; margin-bottom: 18px; }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(22px, 2.8vw, 30px);
+    line-height: 1.2;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .dur {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent-ink);
+    background: var(--accent);
+    padding: 3px 9px;
+    border-radius: 6px;
+  }
+  h3 { font-size: 19px; font-weight: 600; margin: 40px 0 12px; text-wrap: balance; }
+  p { margin: 0 0 12px; max-width: 66ch; }
+  .muted { color: var(--ink-2); }
+
+  .intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 32px; align-items: start; }
+  @media (max-width: 900px) { .intro { grid-template-columns: 1fr; } }
+  figure { margin: 0; }
+  .video {
+    background: var(--video-ground);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .video video { display: block; width: 100%; height: auto; max-width: 100%; }
+  figcaption { font-size: 13.5px; color: var(--ink-2); margin-top: 10px; max-width: 60ch; }
+
+  ul.rules { margin: 0; padding-left: 20px; display: grid; gap: 8px; max-width: 68ch; }
+  ul.rules li::marker { color: var(--accent); }
+
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14.5px; }
+  th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 500; color: var(--ink-2); font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; background: var(--surface-2); white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-family: var(--font-mono); font-size: 13.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* timeline */
+  .tl-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+  .tl { min-width: 760px; padding: 6px 0 14px; }
+  .tl-head, .tl-row { display: grid; grid-template-columns: 250px minmax(0, 1fr); }
+  .tl-head { position: sticky; top: 0; }
+  .tl-ruler { position: relative; height: 34px; margin-right: 20px; }
+  .tl-tick { position: absolute; bottom: 6px; width: 1px; height: 6px; background: var(--line); }
+  .tl-tick.major { height: 10px; background: var(--ink-3); }
+  .tl-tick span {
+    position: absolute; bottom: 12px; left: 0; transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-3); white-space: nowrap;
+  }
+  .tl-group { grid-column: 1 / -1; padding: 14px 16px 4px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .tl-row { min-height: 40px; align-items: center; }
+  .tl-row:hover { background: var(--surface-2); }
+  .tl-label { padding: 6px 12px 6px 16px; font-size: 14px; line-height: 1.3; }
+  .tl-label small { display: block; font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .tl-track { position: relative; height: 40px; margin-right: 20px; }
+  .tl-grid { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); opacity: 0.55; }
+  .tl-bar {
+    position: absolute; top: 9px; height: 22px; border-radius: 6px;
+    background: color-mix(in srgb, var(--k) 26%, transparent);
+    border: 1px solid color-mix(in srgb, var(--k) 70%, transparent);
+    display: flex; align-items: center; padding: 0 7px; overflow: visible; min-width: 4px;
+  }
+  .tl-bar i {
+    font-style: normal; font-family: var(--font-mono); font-size: 11.5px; color: var(--ink);
+    white-space: nowrap; position: absolute; left: calc(100% + 8px);
+  }
+  .tl-bar.hold { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--k) 18%, transparent) 0 5px, transparent 5px 10px); border-style: dashed; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 12px 2px 0; font-size: 13.5px; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend span::before { content: ""; width: 14px; height: 10px; border-radius: 3px; background: color-mix(in srgb, var(--k) 30%, transparent); border: 1px solid var(--k); }
+
+  .k-move { --k: var(--c-move); }
+  .k-scale { --k: var(--c-scale); }
+  .k-fade { --k: var(--c-fade); }
+  .k-blur { --k: var(--c-blur); }
+  .k-other { --k: var(--c-other); }
+
+  .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+  @media (max-width: 820px) { .two { grid-template-columns: 1fr; } }
+  .note {
+    border-left: 2px solid var(--accent);
+    padding: 4px 0 4px 16px;
+    color: var(--ink-2);
+    max-width: 70ch;
+    margin: 18px 0 0;
+  }
+  .note b { color: var(--ink); font-weight: 600; }
+
+  /* curves */
+  .curves { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; margin-top: 18px; }
+  .curve { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 14px; align-items: center; }
+  .curve svg { width: 84px; height: 84px; display: block; }
+  .curve h4 { margin: 0 0 3px; font-size: 15px; font-weight: 600; }
+  .curve code { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent); display: block; margin-bottom: 4px; }
+  .curve p { font-size: 13px; color: var(--ink-2); margin: 0; }
+
+  footer { margin-top: 72px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
+
+  @media (max-width: 520px) {
+    body { font-size: 15.5px; padding-inline: 16px; }
+    .reading { grid-template-columns: 1fr; }
+    header.top { padding-block: 36px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">VIP Cashback · моушн для разработки</div>
+    <h1>Анимации слайдера и мини-карточки</h1>
+    <p class="lead">Что двигается, когда, насколько и по какой кривой. Видео сняты с макетов, таймлайны ниже совпадают с ними покадрово.</p>
+    <nav class="jump" aria-label="Разделы">
+      <a href="#slider">Слайдер на десктопе</a>
+      <a href="#mobile">Слайдер на мобилке</a>
+      <a href="#mini">Мини-карточка</a>
+      <a href="#curves">Кривые</a>
+    </nav>
+    <div class="reading" role="list">
+      <div role="listitem"><b>Время</b>в секундах от действия: клика по стрелке или показа экрана</div>
+      <div role="listitem"><b>Сдвиги</b>в px при масштабе 1:1, масштаб от центра карточки</div>
+      <div role="listitem"><b>Кривые</b>кубические Безье, у каждой есть имя, все собраны в конце</div>
+    </div>
+  </header>
+
+  <!-- ============ SLIDER DESKTOP ============ -->
+  <section class="anim" id="slider">
+    <div class="sec-head">
+      <h2>Слайдер статусов на десктопе</h2>
+      <span class="dur">шаг 0,75 с</span>
+    </div>
+    <div class="intro">
+      <div>
+        <p>В центре развёрнутая карточка статуса, справа компактная карточка следующего. Стрелки переключают статусы одной непрерывной лентой: все карточки двигаются одновременно, без пауз между шагами.</p>
+        <p class="muted">Главный принцип: приходящая карточка сначала едет, а растёт с задержкой 0,1 с. Так она не наезжает на стрелки под соседним слотом.</p>
+        <ul class="rules">
+          <li>Нажатия во время анимации игнорируем.</li>
+          <li>До принятия участия карусель зациклена, обе стрелки активны.</li>
+          <li>Во время участия на первом статусе неактивна «назад», на последнем «вперёд».</li>
+          <li>Позиция стрелок фиксирована и не меняется при переключении, даже если карточки разной высоты.</li>
+        </ul>
+      </div>
+      <figure>
+        <div class="video"><video src="slider.mp4" poster="slider-poster.jpg" muted loop playsinline autoplay controls width="1000" height="600" aria-label="Демо: два шага вперёд"></video></div>
+        <figcaption>Два шага вперёд: Bronze → Silver → Gold. Между нажатиями пауза 1,8 с.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Позиции в покое</h3>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Слот</th><th>Сдвиг по X</th><th>Масштаб</th><th>Прозрачность</th><th>Что ещё</th></tr></thead>
+        <tbody>
+          <tr><td>Центральная карточка</td><td class="num">0</td><td class="num">1</td><td class="num">100%</td><td>Ширина 400 px, высота по содержимому, есть ховер</td></tr>
+          <tr><td>Следующая</td><td class="num">+371 px</td><td class="num">0,735</td><td class="num">72%</td><td>Визуально 294 px, зазор до центральной 24 px. Высота не больше 422 px, если содержимое выше, обрезаем с затемнением снизу 96 px. Без ховера</td></tr>
+          <tr><td>За следующей, скрыта</td><td class="num">+689 px</td><td class="num">0,735</td><td class="num">0</td><td>Ждёт своей очереди за правым краем</td></tr>
+          <tr><td>Ушедшая влево, скрыта</td><td class="num">−70 px</td><td class="num">0,92</td><td class="num">0</td><td>Размытие 6 (в браузере около 3 px)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Шаг вперёд</h3>
+    <p class="muted">Клик по стрелке «вперёд». Центральная уходит влево, следующая приезжает в центр, за ней выезжает новая соседняя.</p>
+    <div class="tl-scroll"><div class="tl" data-tl="forward"></div></div>
+    <div class="legend"><span class="k-move">сдвиг</span><span class="k-scale">масштаб и высота</span><span class="k-fade">прозрачность</span><span class="k-blur">размытие</span><span class="k-other">корона и кнопки</span></div>
+
+    <h3>Шаг назад</h3>
+    <p class="muted">Зеркально шагу вперёд, но с другим порядком: карточка из центра сначала уменьшается, а вправо едет на 0,11 с позже. Иначе она на старте перекрыла бы стрелки.</p>
+    <div class="tl-scroll"><div class="tl" data-tl="back"></div></div>
+
+    <h3>Карточка с прогрессом</h3>
+    <div class="intro">
+      <div>
+        <p>Карточка с прогрессом выше остальных, до 523 px. В центре она раскрыта целиком, на месте соседней обрезана до 422 px с затемнением снизу.</p>
+        <ul class="rules">
+          <li>Уход из центра: высота 513 → 422 px и затемнение 0 → 100% идут вместе с уменьшением, 0–0,65 с, кривая «Сжатие».</li>
+          <li>Возврат в центр: высота 422 → 513 px и затемнение 100% → 0 вместе с ростом, 0,1–0,75 с, кривая «Рост».</li>
+          <li>Отдельного шага раскрытия после остановки нет, карточка не разъезжается.</li>
+          <li>Стрелки остаются на месте.</li>
+        </ul>
+      </div>
+      <figure>
+        <div class="video"><video src="progress.mp4" poster="progress-poster.jpg" muted loop playsinline autoplay controls width="1000" height="720" aria-label="Демо: карточка с прогрессом уходит и возвращается"></video></div>
+        <figcaption>Silver с прогрессом: шаг назад к Bronze, затем вперёд. Высота меняется в том же движении, что и масштаб.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Подпись под карточкой и кнопки</h3>
+    <div class="two">
+      <div>
+        <p><b>Подпись «Учитываются прогнозы за 4 недели»</b> не ездит вместе с карточками. Она гаснет за 0,25 с (ease-out), ждёт 0,2 с и проявляется под новой карточкой за 0,45 с по кривой «Основная».</p>
+      </div>
+      <div>
+        <p><b>Стрелка</b> при нажатии уменьшается до 0,9 за 0,1 с (ease-out) и возвращается за 0,25 с по кривой «Сжатие». Если после шага стрелка становится активной или неактивной, её прозрачность меняется между 32% и 100% за 0,4 с по кривой «Основная».</p>
+      </div>
+    </div>
+    <p class="note"><b>Уменьшенное движение.</b> Если в системе включено уменьшение движения, карточки меняются кроссфейдом за 0,2 с без сдвигов, масштаба и размытия. Подпись и кнопки так же.</p>
+  </section>
+
+  <!-- ============ SLIDER MOBILE ============ -->
+  <section class="anim" id="mobile">
+    <div class="sec-head">
+      <h2>Слайдер статусов на мобилке</h2>
+      <span class="dur">доводка 0,35 с</span>
+    </div>
+    <p>Статусы листаются свайпом. Карточка 328 px, соседние выглядывают по краям. Стрелок нет.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Момент</th><th>Что происходит</th><th>Время и кривая</th></tr></thead>
+        <tbody>
+          <tr><td>Палец ведёт</td><td>Лента идёт за пальцем один к одному. Подпись под карточкой гаснет, как только лента сдвинулась.</td><td class="num">подпись 0,15 с, ease-out</td></tr>
+          <tr><td>Отпустили</td><td>Если палец прошёл больше трети ширины карточки или жест был быстрым, переключаем на соседний статус. Иначе возвращаем на место.</td><td class="num">0,35 с, «Основная»</td></tr>
+          <tr><td>Высота</td><td>Высота карусели подстраивается под новую активную карточку в том же движении. Контент ниже сдвигается плавно.</td><td class="num">0,35 с, «Основная»</td></tr>
+          <tr><td>Пагинация</td><td>Активная точка перетекает на новую позицию.</td><td class="num">0,35 с, «Основная»</td></tr>
+          <tr><td>Подпись</td><td>Проявляется под новой карточкой после доводки, без сдвига.</td><td class="num">0,3 с, «Основная»</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ MINI CARD ============ -->
+  <section class="anim" id="mini">
+    <div class="sec-head">
+      <h2>Мини-карточка статуса</h2>
+      <span class="dur">появление 1,2 с</span>
+      <span class="dur">блик каждые 3,2 с</span>
+    </div>
+    <div class="intro">
+      <div>
+        <p>Карточка «Твой статус» вверху мобильного лендинга, когда у клиента есть статус или его нужно подтвердить. Появляется из лёгкого размытия и чуть крупнее, затем по очереди проявляются строки. После появления по карточке и её обводке проходит блик.</p>
+        <ul class="rules">
+          <li>Появление играем один раз при показе экрана. При повторном рендере, например после обновления данных, карточка сразу в покое.</li>
+          <li>Блик бесконечный: первый проход на 1,6 с, дальше каждые 3,2 с (проход 1,4 с и пауза 1,8 с). Ставим на паузу, когда карточка вне экрана или вкладка неактивна.</li>
+          <li>Цвет лейбла, обводки и свечения берётся из цвета статуса.</li>
+        </ul>
+      </div>
+      <figure>
+        <div class="video"><video src="mini-a.mp4" poster="mini-a-poster.jpg" muted loop playsinline autoplay controls width="720" height="360" aria-label="Демо: появление мини-карточки и блик"></video></div>
+        <figcaption>Появление и первый проход блика, 3,4 с. Видео в два раза крупнее реального размера.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Появление и первый блик</h3>
+    <p class="muted">Время от показа экрана. Строки: верхняя (лейбл, статус и процент), разделитель, строка «Предварительный кешбэк».</p>
+    <div class="tl-scroll"><div class="tl" data-tl="mini"></div></div>
+    <div class="legend"><span class="k-move">сдвиг</span><span class="k-scale">масштаб</span><span class="k-fade">прозрачность</span><span class="k-blur">размытие</span><span class="k-other">свет и блик</span></div>
+
+    <h3>Как устроены свет и блик</h3>
+    <div class="two">
+      <div>
+        <p><b>Свечение</b> за карточкой: мягкое пятно цвета статуса. В покое 10%, при появлении вспыхивает до 32% и оседает.</p>
+        <p><b>Световой кант</b> по обводке: белый, при появлении поднимается до 50% и гаснет к 1,75 с.</p>
+      </div>
+      <div>
+        <p><b>Блик</b>: полоса 240 px на всю высоту карточки, диагональный белый градиент 0% → 14% в центре → 0%, обрезан скруглением карточки. Идёт слева направо от −240 px до правого края, путь 568 px.</p>
+        <p><b>Блик по обводке</b>: та же полоса ярче, с пиком 60%, видна только на кольце обводки и движется синхронно с основной.</p>
+      </div>
+    </div>
+    <p class="note"><b>Уменьшенное движение.</b> Без сдвига, масштаба и размытия: карточка и строки проявляются прозрачностью за 0,3 с, блика нет.</p>
+  </section>
+
+  <!-- ============ CURVES ============ -->
+  <section class="anim" id="curves">
+    <div class="sec-head"><h2>Кривые</h2></div>
+    <p class="muted">Кубические Безье в порядке x1, y1, x2, y2. Имена используются в таймлайнах выше.</p>
+    <div class="curves" data-curves></div>
+  </section>
+
+  <footer>VIP Cashback. Спецификация анимаций для разработки: слайдер статусов и мини-карточка.</footer>
+</div>
+
+<script>
+(function () {
+  var CURVES = {
+    'Основная':     { v: [0.3, 0, 0.2, 1],   use: 'Лента слайдера, подпись, кнопки' },
+    'Въезд':        { v: [0.25, 0.8, 0.25, 1], use: 'Приходящая карточка по X: быстрый старт, мягкое торможение' },
+    'Рост':         { v: [0.5, 0, 0.2, 1],   use: 'Масштаб, прозрачность и высота приходящей карточки' },
+    'Сжатие':       { v: [0.2, 0.8, 0.3, 1], use: 'Уменьшение карточки при шаге назад, возврат короны, отпускание кнопки' },
+    'Мягкий выход': { v: [0.16, 1, 0.3, 1],  use: 'Сдвиг и масштаб мини-карточки и её строк' },
+    'Проявление':   { v: [0.33, 1, 0.68, 1], use: 'Прозрачность строк мини-карточки, вспышка свечения' },
+    'Появление':    { v: [0.4, 0, 0.2, 1],   use: 'Прозрачность мини-карточки целиком' },
+    'Резкость':     { v: [0.25, 1, 0.5, 1],  use: 'Размытие мини-карточки уходит в ноль' },
+    'ease-out':     { v: [0, 0, 0.58, 1],    use: 'Гаснущие элементы, размытие строк, нажатие кнопки' },
+    'ease-in-out':  { v: [0.42, 0, 0.58, 1], use: 'Блик, световой кант, оседание свечения' }
+  };
+
+  // rows: [group] or [label, detail, kind, t0, t1, curveName, hold?]
+  var TL = {
+    forward: { T: 1.0, step: 0.05, major: 0.25, rows: [
+      ['Уходящая карточка, из центра влево'],
+      ['Сдвиг X', '0 → −70 px', 'move', 0, 0.75, 'Основная'],
+      ['Масштаб', '1 → 0,92', 'scale', 0, 0.75, 'Основная'],
+      ['Прозрачность', '100% → 0', 'fade', 0, 0.45, 'ease-out'],
+      ['Размытие', '0 → 6', 'blur', 0, 0.5, 'ease-out'],
+      ['Приходящая карточка, из слота справа в центр'],
+      ['Сдвиг X', '+371 → 0 px', 'move', 0, 0.75, 'Въезд'],
+      ['Масштаб', '0,735 → 1', 'scale', 0.1, 0.75, 'Рост'],
+      ['Прозрачность', '72% → 100%', 'fade', 0.1, 0.75, 'Рост'],
+      ['Высота, если есть прогресс', '422 → 513 px, затемнение гаснет', 'scale', 0.1, 0.75, 'Рост'],
+      ['Корона: кивок', 'вниз 5 px, наклон 6° влево', 'other', 0, 0.25, 'ease-out'],
+      ['Корона: возврат', 'в исходное положение', 'other', 0.25, 0.95, 'Сжатие'],
+      ['Новая соседняя, из-за правого края'],
+      ['Сдвиг X', '+689 → +371 px', 'move', 0.06, 0.81, 'Основная'],
+      ['Прозрачность', '0 → 72%', 'fade', 0.06, 0.81, 'Основная'],
+      ['Подпись под центральной карточкой'],
+      ['Гаснет', '100% → 0', 'fade', 0, 0.25, 'ease-out'],
+      ['Пауза', 'невидима', 'fade', 0.25, 0.45, '', true],
+      ['Проявляется', '0 → 100%', 'fade', 0.45, 0.9, 'Основная'],
+      ['Стрелки'],
+      ['Нажатие', 'масштаб 1 → 0,9', 'other', 0, 0.1, 'ease-out'],
+      ['Отпускание', 'масштаб 0,9 → 1', 'other', 0.1, 0.35, 'Сжатие'],
+      ['Смена доступности', 'прозрачность 32% ↔ 100%', 'fade', 0, 0.4, 'Основная']
+    ]},
+    back: { T: 1.25, step: 0.05, major: 0.25, rows: [
+      ['Центральная карточка, в слот справа'],
+      ['Масштаб', '1 → 0,735', 'scale', 0, 0.65, 'Сжатие'],
+      ['Прозрачность', '100% → 72%', 'fade', 0, 0.65, 'Сжатие'],
+      ['Высота, если есть прогресс', '513 → 422 px, затемнение 0 → 100%', 'scale', 0, 0.65, 'Сжатие'],
+      ['Сдвиг X', '0 → +371 px', 'move', 0.11, 0.75, 'Рост'],
+      ['Ушедшая слева, возвращается в центр'],
+      ['Сдвиг X', '−70 → 0 px', 'move', 0.05, 0.8, 'Основная'],
+      ['Масштаб', '0,92 → 1', 'scale', 0.05, 0.8, 'Основная'],
+      ['Прозрачность', '0 → 100%', 'fade', 0.05, 0.6, 'Основная'],
+      ['Размытие', '6 → 0', 'blur', 0.05, 0.7, 'Основная'],
+      ['Корона: кивок', 'когда карточка уже видна', 'other', 0.3, 0.55, 'ease-out'],
+      ['Корона: возврат', 'в исходное положение', 'other', 0.55, 1.2, 'Сжатие'],
+      ['Соседняя справа, уходит за край'],
+      ['Сдвиг X', '+371 → +689 px', 'move', 0, 0.75, 'Основная'],
+      ['Прозрачность', '72% → 0', 'fade', 0, 0.45, 'ease-out'],
+      ['Подпись и стрелки'],
+      ['Подпись', 'как при шаге вперёд', 'fade', 0, 0.9, 'Основная'],
+      ['Стрелка «назад»', 'нажатие и отпускание', 'other', 0, 0.35, 'Сжатие']
+    ]},
+    mini: { T: 3.2, step: 0.1, major: 0.5, rows: [
+      ['Карточка целиком'],
+      ['Прозрачность', '0 → 100%', 'fade', 0, 0.75, 'Появление'],
+      ['Сдвиг Y', '+10 → 0 px', 'move', 0, 1.2, 'Мягкий выход'],
+      ['Масштаб', '1,04 → 1', 'scale', 0, 1.2, 'Мягкий выход'],
+      ['Размытие', '14 → 0 (около 7 px в браузере)', 'blur', 0, 0.95, 'Резкость'],
+      ['Верхняя строка: лейбл, статус, процент'],
+      ['Прозрачность', '0 → 100%', 'fade', 0.3, 0.9, 'Проявление'],
+      ['Сдвиг Y', '+6 → 0 px', 'move', 0.3, 1.0, 'Мягкий выход'],
+      ['Размытие', '4 → 0', 'blur', 0.3, 0.9, 'ease-out'],
+      ['Разделитель'],
+      ['Прозрачность, сдвиг +6 px, размытие 4', 'та же схема, старт на 0,08 с позже', 'fade', 0.38, 1.08, 'Проявление'],
+      ['Строка «Предварительный кешбэк»'],
+      ['Прозрачность, сдвиг +6 px, размытие 4', 'та же схема, ещё на 0,08 с позже', 'fade', 0.46, 1.16, 'Проявление'],
+      ['Свет'],
+      ['Свечение: вспышка', '0 → 32%', 'other', 0.15, 0.95, 'Проявление'],
+      ['Свечение: оседает', '32% → 10%, дальше в покое', 'other', 0.95, 2.0, 'ease-in-out'],
+      ['Световой кант: вспышка', '0 → 50%', 'other', 0.5, 0.95, 'ease-in-out'],
+      ['Световой кант: гаснет', '50% → 0', 'other', 0.95, 1.75, 'ease-in-out'],
+      ['Блик'],
+      ['Полоса по карточке и обводке', '−240 → +328 px, дальше каждые 3,2 с', 'other', 1.6, 3.0, 'ease-in-out']
+    ]}
+  };
+
+  function fmt(n) { return (Math.round(n * 100) / 100).toString().replace('.', ','); }
+
+  function build(el, spec) {
+    var T = spec.T;
+    var pct = function (t) { return (t / T * 100) + '%'; };
+    var head = document.createElement('div'); head.className = 'tl-head';
+    head.appendChild(document.createElement('div'));
+    var ruler = document.createElement('div'); ruler.className = 'tl-ruler';
+    var n = Math.round(T / spec.step);
+    for (var i = 0; i <= n; i++) {
+      var t = i * spec.step;
+      var tick = document.createElement('div');
+      var isMajor = Math.abs((t / spec.major) - Math.round(t / spec.major)) < 1e-6;
+      tick.className = 'tl-tick' + (isMajor ? ' major' : '');
+      tick.style.left = pct(t);
+      if (isMajor) { var s = document.createElement('span'); s.textContent = fmt(t) + ' с'; tick.appendChild(s); }
+      ruler.appendChild(tick);
+    }
+    head.appendChild(ruler);
+    el.appendChild(head);
+    spec.rows.forEach(function (r) {
+      if (r.length === 1) {
+        var g = document.createElement('div'); g.className = 'tl-group'; g.textContent = r[0];
+        var wrapG = document.createElement('div'); wrapG.className = 'tl-row'; wrapG.style.minHeight = '0'; wrapG.appendChild(g);
+        el.appendChild(wrapG);
+        return;
+      }
+      var row = document.createElement('div'); row.className = 'tl-row';
+      var lab = document.createElement('div'); lab.className = 'tl-label';
+      lab.textContent = r[0];
+      var sm = document.createElement('small'); sm.textContent = r[1]; lab.appendChild(sm);
+      var track = document.createElement('div'); track.className = 'tl-track';
+      for (var j = 0; j <= Math.round(T / spec.major); j++) {
+        var gl = document.createElement('div'); gl.className = 'tl-grid'; gl.style.left = pct(j * spec.major); track.appendChild(gl);
+      }
+      var bar = document.createElement('div');
+      bar.className = 'tl-bar k-' + r[2] + (r[6] ? ' hold' : '');
+      bar.style.left = pct(r[3]);
+      bar.style.width = 'calc(' + ((r[4] - r[3]) / T * 100) + '% )';
+      var cap = document.createElement('i');
+      cap.textContent = fmt(r[3]) + '–' + fmt(r[4]) + ' с' + (r[5] ? ' · ' + r[5] : '');
+      var wFrac = (r[4] - r[3]) / T, rightRoom = 1 - r[4] / T, leftRoom = r[3] / T;
+      if (rightRoom < 0.3) {
+        if (leftRoom >= 0.3) { cap.style.left = 'auto'; cap.style.right = 'calc(100% + 8px)'; }
+        else if (wFrac >= 0.3) { cap.style.left = '8px'; cap.style.position = 'static'; }
+      }
+      bar.appendChild(cap);
+      bar.title = r[0] + ': ' + r[1] + ', ' + cap.textContent;
+      track.appendChild(bar);
+      row.appendChild(lab); row.appendChild(track);
+      el.appendChild(row);
+    });
+  }
+
+  document.querySelectorAll('[data-tl]').forEach(function (el) { build(el, TL[el.getAttribute('data-tl')]); });
+
+  // curves
+  var box = document.querySelector('[data-curves]');
+  Object.keys(CURVES).forEach(function (name) {
+    var c = CURVES[name], v = c.v;
+    var card = document.createElement('div'); card.className = 'curve';
+    var P = function (x, y) { return [6 + x * 72, 78 - y * 72]; };
+    var p0 = P(0, 0), p1 = P(v[0], v[1]), p2 = P(v[2], v[3]), p3 = P(1, 1);
+    var svg = '<svg viewBox="0 0 84 84" aria-hidden="true">' +
+      '<rect x="6" y="6" width="72" height="72" rx="6" fill="none" stroke="var(--line)" />' +
+      '<line x1="' + p0[0] + '" y1="' + p0[1] + '" x2="' + p1[0] + '" y2="' + p1[1] + '" stroke="var(--ink-3)" stroke-width="1" />' +
+      '<line x1="' + p3[0] + '" y1="' + p3[1] + '" x2="' + p2[0] + '" y2="' + p2[1] + '" stroke="var(--ink-3)" stroke-width="1" />' +
+      '<circle cx="' + p1[0] + '" cy="' + p1[1] + '" r="2.6" fill="var(--ink-2)" />' +
+      '<circle cx="' + p2[0] + '" cy="' + p2[1] + '" r="2.6" fill="var(--ink-2)" />' +
+      '<path d="M' + p0 + ' C' + p1 + ' ' + p2 + ' ' + p3 + '" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" />' +
+      '</svg>';
+    card.innerHTML = svg + '<div><h4></h4><code></code><p></p></div>';
+    card.querySelector('h4').textContent = name;
+    card.querySelector('code').textContent = v.map(function (x) { return String(x).replace('.', ','); }).join('; ');
+    card.querySelector('p').textContent = c.use;
+    box.appendChild(card);
+  });
+
+  // reduced motion: no autoplay
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('video[autoplay]').forEach(function (v) { v.removeAttribute('autoplay'); v.pause(); });
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
